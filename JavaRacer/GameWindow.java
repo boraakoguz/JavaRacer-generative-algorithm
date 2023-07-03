@@ -17,13 +17,16 @@ public class GameWindow extends JPanel implements Runnable{
     TileManager tileManager = new TileManager(this);
     Agent[] agents = new Agent[10];
     CollisionControl collisionControl = new CollisionControl(this);
+    Camera camera;
 
     public GameWindow(){
         Color backgroundColor = new Color(34, 139, 34);
         for(int i = 0; i<agents.length;i++){
-            agents[i] = new Agent(this);        
+            agents[i] = new Agent(this);
+            agents[i].agentX += i*50;  
+            agents[i].agentY += i*50;      
         }
-
+        this.camera = new Camera(this,keyHandle, agents[0].agentX, agents[0].agentY);
         this.setBackground(backgroundColor);
         this.setPreferredSize(new Dimension(WIDTH, HEIGHT));
         this.setDoubleBuffered(true);
@@ -55,19 +58,29 @@ public class GameWindow extends JPanel implements Runnable{
     }
     
     public void update(){
-        for (Agent agent : agents) {
-            agent.update();
+        for(int i = 0; i<agents.length;i++){
+            agents[i].update();
         }
+        camera.update();
     }
     public void paintComponent(Graphics graphics){
         super.paintComponent(graphics);
         Graphics2D graphic = (Graphics2D)graphics;
 
-        tileManager.draw(graphic,this.agents[0]);
+        tileManager.draw(graphic,camera);
         for (Agent agent : agents) {
             agent.draw(graphic);
         }
 
         graphic.dispose();
+    }
+    public int getTileSize(){
+        return this.tileSize;
+    }
+    public int getRow(){
+        return this.row;
+    }
+    public int getCollumn(){
+        return this.collumn;
     }
 }

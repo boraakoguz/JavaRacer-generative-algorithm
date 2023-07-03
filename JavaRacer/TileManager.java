@@ -1,7 +1,5 @@
 package JavaRacer;
 
-import java.awt.Color;
-import java.awt.Font;
 import java.awt.Graphics2D;
 import java.io.File;
 import java.io.IOException;
@@ -12,12 +10,16 @@ public class TileManager {
     GameWindow gameWindow;
     MapTiles[] tiles;
     public int[][] map;
+    int row,collumn,tileSize;
     
     public TileManager(GameWindow gw){
         this.gameWindow = gw;
         tiles = new MapTiles[9];
         loadTileImages();
         map = MapLoader.loadMap();
+        row = gameWindow.getRow();
+        collumn = gameWindow.getCollumn();
+        tileSize = gameWindow.getTileSize();
     }
     public void loadTileImages(){
          try {
@@ -62,29 +64,24 @@ public class TileManager {
             e.printStackTrace();
         }
     }
-    public void draw(Graphics2D graphics2d, Agent agent){ //Draws the map around the agent
-        for(int i = 0; i<gameWindow.row;i++){
-            int worldY = i*gameWindow.tileSize;
-            int screenY = worldY - agent.agentY + agent.screenMidY;
-            for(int j = 0; j<gameWindow.collumn; j++){
-                int worldX = j*gameWindow.tileSize;
-                int screenX = worldX - agent.agentX + agent.screenMidX;
-                if(worldX>agent.agentX-agent.screenMidX -1*gameWindow.tileSize&&
-                worldX<agent.agentX+agent.screenMidX+3*gameWindow.tileSize&&
-                worldY>agent.agentY-agent.screenMidY-1*gameWindow.tileSize&&
-                worldY<agent.agentY+agent.screenMidY+3*gameWindow.tileSize){
-                    graphics2d.drawImage(tiles[map[i][j]].image,screenX,screenY,gameWindow.tileSize,gameWindow.tileSize,null);
+    public void draw(Graphics2D graphics2d, Camera camera){ //Draws the map around the agent
+        int cameraX = camera.getWorldX();
+        int cameraY = camera.getWorldY();
+        int screenMidX = camera.getScreenMidX();
+        int screenMidY = camera.getScreenMidY();
+        for(int i = 0; i<row;i++){
+            int worldY = i*tileSize;
+            int screenY = worldY - cameraY + screenMidY;
+            for(int j = 0; j<collumn; j++){
+                int worldX = j*tileSize;
+                int screenX = worldX - cameraX + screenMidX;
+                if(worldX>cameraX-screenMidX -1*tileSize&&
+                worldX<cameraX+screenMidX+3*tileSize&&
+                worldY>cameraY-screenMidY-1*tileSize&&
+                worldY<cameraY+screenMidY+3*tileSize){
+                    graphics2d.drawImage(tiles[map[i][j]].image,screenX,screenY,tileSize,tileSize,null);
                 }
             }
-        }
-        graphics2d.setFont(new Font("TimesRoman", Font.BOLD, 30));
-        graphics2d.setColor(Color.BLACK);
-        graphics2d.drawString("Points: " + Integer.toString(agent.points), 10, 30);
-        graphics2d.drawString("Laps: " + Integer.toString(agent.laps), 10, 60);
-        graphics2d.drawString("Speed: " + Integer.toString((int)Math.floor(agent.velocity.netVelocity())), gameWindow.tileSize*25, 30);
-        if(agent.isCollided){
-            graphics2d.setColor(Color.red);
-            graphics2d.drawString("-1000", agent.screenMidX, agent.screenMidY-50);
         }
     }
 }

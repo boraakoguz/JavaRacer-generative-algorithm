@@ -6,25 +6,23 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.Random;
-
 import javax.imageio.ImageIO;
 
 public class Agent {
-    public int agentX,agentY; //x,y coordinates and rotation of the car in degrees. 0 representing right as in cartesian system(stored in velocity)
-    public Rectangle solidArea = new Rectangle(); // aka hitbox of the car
+    static Random rand = new Random(0);
+
+    int agentX,agentY; //x,y coordinates in the world and rotation of the car in degrees. 0 representing right as in cartesian system(stored in velocity)
+    int screenX, screenY; //the x,y coordinates of the car on screen
+    Rectangle solidArea = new Rectangle(); // aka hitbox of the car
     public double frictionCoefficient; //road friction: 1 in asphalt, 0.1 in grass checked by CollisionControl class
     public int points, laps = 0;
     public boolean onFinishLine, offFinishLine, isCollided = false; //flags for game logic
     public int[] instructions = new int[100];
     int nextActionTimer,instructionIndex;
-    int screenMidX, screenMidY; 
     public BufferedImage playerModel;
     GameWindow gameWindow;
     Velocity velocity;
     int counter;
-
-
-    Random rand = new Random(0);
 
     public Agent(GameWindow gw){
         this.gameWindow = gw;
@@ -34,9 +32,14 @@ public class Agent {
         this.agentX=MapLoader.spawnX*gameWindow.tileSize;
         this.agentY=MapLoader.spawnY*gameWindow.tileSize;
         this.velocity = new Velocity();
+        for(int i = 0; i<100; i++){
+            instructions[i] = 4;
+        }
+        /* 
         for(int i = 0; i<50; i++){
             instructions[i] = rand.nextInt(5);
         }
+        */
         switch (MapLoader.spawnDirection) {
             case 0:
                 velocity.angle = 0;
@@ -61,8 +64,6 @@ public class Agent {
         try {
             File tmp = new File("source/car.png");
             playerModel = ImageIO.read(tmp);
-            this.screenMidX = this.gameWindow.WIDTH/2 - (playerModel.getWidth()/4);
-            this.screenMidY = this.gameWindow.HEIGHT/2 -(playerModel.getHeight()/4);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -141,7 +142,42 @@ public class Agent {
         }
     }
     public void draw(Graphics2D graphics){
-        graphics.rotate(Math.toRadians(-velocity.angle),agentX+playerModel.getWidth()/4,agentY+playerModel.getHeight()/4);
-        graphics.drawImage(playerModel,agentX,agentY,playerModel.getWidth()/2,playerModel.getHeight()/2,null);
+        int camX = gameWindow.camera.getWorldX();
+        int camY =  gameWindow.camera.getWorldY();
+        int screenMidX = gameWindow.camera.getScreenMidX();
+        int screenMidY = gameWindow.camera.getScreenMidY();
+        int tileSize = gameWindow.getTileSize();
+
+        int screenX = agentX - camX + screenMidX;
+        int screenY = agentY - camY + screenMidY;
+
+        if(agentX>camX-screenMidX -1*tileSize&&
+        agentX<agentX+screenMidX+3*tileSize&&
+        agentY>agentY-screenMidY-1*tileSize&&
+        agentY<agentY+screenMidY+3*tileSize){
+            graphics.rotate(Math.toRadians(-velocity.angle),screenX+playerModel.getWidth()/4,screenY+playerModel.getHeight()/4);
+            graphics.drawImage(playerModel,screenX,screenY,playerModel.getWidth()/2,playerModel.getHeight()/2,null);
+        }
+    }
+    public String toString(){
+        return this.agentX + " " + this.agentY;
+    }
+    public int getAgentX(){
+        return this.agentX;
+    }
+    public int getAgentY(){
+        return this.agentY;
+    }
+    public int getPoints(){
+        return this.points;
+    }
+    public int getLaps(){
+        return this.laps;
+    }
+    public Velocity getVelocity(){
+        return this.velocity;
+    }
+    public boolean getIsCollided(){
+        return this.isCollided;
     }
 }
