@@ -61,7 +61,9 @@ public class GameWindow extends JPanel implements Runnable{
         for(int i = 0; i<agents.length;i++){
             agents[i].update();
         }
-        genAlg.checkGeneration();
+        if(genAlg.generationNumber<genAlg.NUMBER_OF_GENERATIONS){
+            genAlg.checkGeneration();
+        }
         camera.update();
     }
     public void paintComponent(Graphics graphics){

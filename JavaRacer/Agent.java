@@ -15,7 +15,8 @@ public class Agent {
     int screenX, screenY; //the x,y coordinates of the car on screen
     Rectangle solidArea = new Rectangle(); // aka hitbox of the car
     public double frictionCoefficient; //road friction: 1 in asphalt, 0.1 in grass checked by CollisionControl class
-    public int points, laps = 0;
+    public int laps = 0;
+    public double points = 0;
     public boolean onFinishLine, offFinishLine, isCollided = false; //flags for game logic
     public ArrayList<Integer> instructions;
     int nextActionTimer,instructionIndex;
@@ -126,11 +127,11 @@ public class Agent {
                 points-=1000;
                 isCollided = true;
             }
-            points -= 2*velocity.netVelocity()/frictionCoefficient;
+            points -= (velocity.netVelocity()/frictionCoefficient)/10;
         }
         else{
             isCollided = false;
-            points += velocity.netVelocity();
+            points += velocity.netVelocity()/10;
         }
         if(points<0){
             points = 0;
@@ -158,6 +159,7 @@ public class Agent {
     }
     public void reset(){
         this.isFinished = false;
+        this.instructionIndex = 0;
         this.agentX=MapLoader.spawnX*gameWindow.tileSize;
         this.agentY=MapLoader.spawnY*gameWindow.tileSize;
         velocity.X = 0;
@@ -189,7 +191,7 @@ public class Agent {
     public int getAgentY(){
         return this.agentY;
     }
-    public int getPoints(){
+    public double getPoints(){
         return this.points;
     }
     public int getLaps(){
