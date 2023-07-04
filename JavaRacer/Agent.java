@@ -2,6 +2,7 @@ package JavaRacer;
 
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
+import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -32,14 +33,11 @@ public class Agent {
         this.agentX=MapLoader.spawnX*gameWindow.tileSize;
         this.agentY=MapLoader.spawnY*gameWindow.tileSize;
         this.velocity = new Velocity();
-        for(int i = 0; i<100; i++){
-            instructions[i] = 4;
-        }
-        /* 
+        
         for(int i = 0; i<50; i++){
             instructions[i] = rand.nextInt(5);
         }
-        */
+        
         switch (MapLoader.spawnDirection) {
             case 0:
                 velocity.angle = 0;
@@ -73,14 +71,14 @@ public class Agent {
         checkLaps();
         calculatePoints();
         if(nextActionTimer%5 == 0 && instructionIndex<instructions.length){
-            int rotationAngle = 5;
+            int rotationAngle;
             double netVelocity = velocity.netVelocity();
             switch (instructions[instructionIndex]) {
                 case 0: //accelerate
-                    velocity.accelerate(0.2*frictionCoefficient);
+                    velocity.accelerate(0.4*frictionCoefficient);
                     break;
                 case 1: //deaccelerate
-                    velocity.accelerate(-0.4);
+                    velocity.accelerate(-0.5);
                     break;
                 case 2: //turn left
                     rotationAngle = 10;
@@ -155,8 +153,10 @@ public class Agent {
         agentX<agentX+screenMidX+3*tileSize&&
         agentY>agentY-screenMidY-1*tileSize&&
         agentY<agentY+screenMidY+3*tileSize){
+            AffineTransform oldTransform = graphics.getTransform(); // save old graphics orientation
             graphics.rotate(Math.toRadians(-velocity.angle),screenX+playerModel.getWidth()/4,screenY+playerModel.getHeight()/4);
             graphics.drawImage(playerModel,screenX,screenY,playerModel.getWidth()/2,playerModel.getHeight()/2,null);
+            graphics.setTransform(oldTransform); // restore old graphics
         }
     }
     public String toString(){

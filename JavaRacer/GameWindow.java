@@ -22,9 +22,7 @@ public class GameWindow extends JPanel implements Runnable{
     public GameWindow(){
         Color backgroundColor = new Color(34, 139, 34);
         for(int i = 0; i<agents.length;i++){
-            agents[i] = new Agent(this);
-            agents[i].agentX += i*50;  
-            agents[i].agentY += i*50;      
+            agents[i] = new Agent(this);        
         }
         this.camera = new Camera(this,keyHandle, agents[0].agentX, agents[0].agentY);
         this.setBackground(backgroundColor);
