@@ -18,12 +18,14 @@ public class GameWindow extends JPanel implements Runnable{
     Agent[] agents = new Agent[10];
     CollisionControl collisionControl = new CollisionControl(this);
     Camera camera;
+    GenerationAlgorithm genAlg;
 
     public GameWindow(){
         Color backgroundColor = new Color(34, 139, 34);
         for(int i = 0; i<agents.length;i++){
             agents[i] = new Agent(this);        
         }
+        this.genAlg = new GenerationAlgorithm(agents);
         this.camera = new Camera(this,keyHandle, agents[0].agentX, agents[0].agentY);
         this.setBackground(backgroundColor);
         this.setPreferredSize(new Dimension(WIDTH, HEIGHT));
@@ -59,6 +61,7 @@ public class GameWindow extends JPanel implements Runnable{
         for(int i = 0; i<agents.length;i++){
             agents[i].update();
         }
+        genAlg.checkGeneration();
         camera.update();
     }
     public void paintComponent(Graphics graphics){

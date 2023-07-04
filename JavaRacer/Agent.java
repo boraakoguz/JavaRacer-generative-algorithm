@@ -6,24 +6,23 @@ import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.Random;
+import java.util.ArrayList;
+
 import javax.imageio.ImageIO;
 
 public class Agent {
-    static Random rand = new Random(0);
-
     int agentX,agentY; //x,y coordinates in the world and rotation of the car in degrees. 0 representing right as in cartesian system(stored in velocity)
     int screenX, screenY; //the x,y coordinates of the car on screen
     Rectangle solidArea = new Rectangle(); // aka hitbox of the car
     public double frictionCoefficient; //road friction: 1 in asphalt, 0.1 in grass checked by CollisionControl class
     public int points, laps = 0;
     public boolean onFinishLine, offFinishLine, isCollided = false; //flags for game logic
-    public int[] instructions = new int[100];
+    public ArrayList<Integer> instructions;
     int nextActionTimer,instructionIndex;
+    public boolean isFinished = false;
     public BufferedImage playerModel;
     GameWindow gameWindow;
     Velocity velocity;
-    int counter;
 
     public Agent(GameWindow gw){
         this.gameWindow = gw;
@@ -32,12 +31,8 @@ public class Agent {
     public void setDefault(){
         this.agentX=MapLoader.spawnX*gameWindow.tileSize;
         this.agentY=MapLoader.spawnY*gameWindow.tileSize;
-        this.velocity = new Velocity();
-        
-        for(int i = 0; i<50; i++){
-            instructions[i] = rand.nextInt(5);
-        }
-        
+        this.velocity = new Velocity();   
+        this.instructions = new ArrayList<Integer>();    
         switch (MapLoader.spawnDirection) {
             case 0:
                 velocity.angle = 0;
@@ -58,7 +53,6 @@ public class Agent {
         this.solidArea.y = 5;
         this.solidArea.width = 25;
         this.solidArea.height = 25;
-    
         try {
             File tmp = new File("source/car.png");
             playerModel = ImageIO.read(tmp);
@@ -70,10 +64,10 @@ public class Agent {
         frictionCoefficient = gameWindow.collisionControl.checkCollision(this);
         checkLaps();
         calculatePoints();
-        if(nextActionTimer%5 == 0 && instructionIndex<instructions.length){
+        if(nextActionTimer%5 == 0 && instructionIndex<instructions.size()){ //take action every 5 frames
             int rotationAngle;
             double netVelocity = velocity.netVelocity();
-            switch (instructions[instructionIndex]) {
+            switch (instructions.get(instructionIndex)) {
                 case 0: //accelerate
                     velocity.accelerate(0.4*frictionCoefficient);
                     break;
@@ -106,6 +100,9 @@ public class Agent {
         
         while(frictionCoefficient<1&&velocity.netVelocity()>10*frictionCoefficient){
             velocity.accelerate(-0.5);
+        }
+        if(instructionIndex == instructions.size()-1){
+            this.isFinished = true;
         }
         this.agentX += velocity.X;
         this.agentY -= velocity.Y;
@@ -158,6 +155,30 @@ public class Agent {
             graphics.drawImage(playerModel,screenX,screenY,playerModel.getWidth()/2,playerModel.getHeight()/2,null);
             graphics.setTransform(oldTransform); // restore old graphics
         }
+    }
+    public void reset(){
+        this.isFinished = false;
+        this.agentX=MapLoader.spawnX*gameWindow.tileSize;
+        this.agentY=MapLoader.spawnY*gameWindow.tileSize;
+        velocity.X = 0;
+        velocity.Y = 0;
+        switch (MapLoader.spawnDirection) {
+            case 0:
+                velocity.angle = 0;
+                break;
+            case 1:
+                velocity.angle = 90;
+                break;
+            case 2:
+                velocity.angle = 180;
+                break;
+            case 3:
+                velocity.angle = 270;
+                break;
+            default:
+                break;
+        }
+
     }
     public String toString(){
         return this.agentX + " " + this.agentY;
