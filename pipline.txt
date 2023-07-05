@@ -1,10 +1,10 @@
 1. create a population with rand properties +
-2. iterate over number of generations
+2. iterate over number of generations +
 3. calculate fitness of each agent (points) +
 4. in the fitness array get the (elitism_number) of agents starting from the best. +
 5. calculate probability values of the array using softmax  +
 6. using the above weights, get randomly chosen pairs from the array and append to a parents_list where each element contains 2 agents +
 7. iterate over population and create childs of these parents using crossover. +
 8. use random to determine whether to mutate or not+
-9. directly append elite agents
+9. directly append elite agents +
 10. set population to new population and continue+

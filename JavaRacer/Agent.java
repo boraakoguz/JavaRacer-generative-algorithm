@@ -160,6 +160,8 @@ public class Agent {
     public void reset(){
         this.isFinished = false;
         this.instructionIndex = 0;
+        this.points = 0;
+        this.laps = 0;
         this.agentX=MapLoader.spawnX*gameWindow.tileSize;
         this.agentY=MapLoader.spawnY*gameWindow.tileSize;
         velocity.X = 0;

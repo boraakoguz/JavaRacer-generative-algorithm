@@ -1,6 +1,5 @@
 package JavaRacer;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Random;
 
@@ -11,10 +10,11 @@ public class GenerationAlgorithm {
     public final int    MAX_MUTATION_COUNT = 5;
     public final int    ELITISM_NUMBER = 2;
     public final int    NUMBER_OF_GENERATIONS_PER_INCREASE = 10;
-    static Random rand = new Random(0);
+    static Random rand = new Random();
     ArrayList<Integer> eliteIndexes = new ArrayList<Integer>();
     int generationNumber = 0;
     int instructionSize = 20;
+    double bestFit = 0;
     Agent[] agents;
 
     public GenerationAlgorithm(Agent[] agents){
@@ -27,9 +27,8 @@ public class GenerationAlgorithm {
             ArrayList<Double> fitnesses = getFitness();
             ArrayList<Double> weights = getWeights(fitnesses);
             ArrayList<Integer[]> parentsList = getParents(weights);
-            for (Integer[] integers : parentsList) {
-                System.out.println(Arrays.toString(integers));
-            }
+            this.bestFit = fitnesses.get(eliteIndexes.get(0));
+            System.out.println("Best fit: " + fitnesses.get(eliteIndexes.get(0)) + " "+ fitnesses.get(eliteIndexes.get(1)));
             System.out.printf("Generation completed number: %d\n",generationNumber);
             crossOver(parentsList);
             for(Agent agent : agents){
@@ -55,6 +54,7 @@ public class GenerationAlgorithm {
         }
         ArrayList<Double> fitnessCopy = new ArrayList<>(fitness);
         Collections.sort(fitnessCopy, Collections.reverseOrder(null));
+        eliteIndexes.clear();
         for(int i = 0; i<ELITISM_NUMBER;i++){
             eliteIndexes.add(fitness.indexOf(fitnessCopy.get(i)));
         }
@@ -95,28 +95,29 @@ public class GenerationAlgorithm {
     public void crossOver(ArrayList<Integer[]> parents){
         ArrayList<ArrayList<Integer>> instructionsTemp = new ArrayList<ArrayList<Integer>>();
         for(int i = 0; i<POPULATION; i++){
-            instructionsTemp.add(agents[i].instructions);
+            instructionsTemp.add(new ArrayList<Integer>(agents[i].instructions));
         }
         for (int i = 0; i<parents.size();i++) {
-            Integer[] parentPair = parents.get(i);
-            if(eliteIndexes.contains(parentPair[0])){
+            if(eliteIndexes.contains(i)){
                 continue;
             }
-            if(parentPair[0] != parentPair[1]){
-                int crossOverLength = rand.nextInt(10);
-                int indexOfCrossing = rand.nextInt(agents[parentPair[0]].instructions.size()-crossOverLength);
-                for(int j = indexOfCrossing; j<indexOfCrossing+crossOverLength;j++){
-                    agents[parentPair[0]].instructions.set(j,instructionsTemp.get(parentPair[1]).get(j));
-                }
+            Integer[] parentPair = parents.get(i);
+            int crossOverLength = rand.nextInt(10);
+            int indexOfCrossing = rand.nextInt(agents[parentPair[0]].instructions.size()-crossOverLength);
+            ArrayList<Integer> instruction1 = new ArrayList<Integer>(instructionsTemp.get(parentPair[0]));
+            ArrayList<Integer> instruction2 = new ArrayList<Integer>(instructionsTemp.get(parentPair[1]));
+            for(int j = indexOfCrossing; j<indexOfCrossing+crossOverLength;j++){
+                instruction1.set(j, instruction2.get(j));
             }
+            agents[i].instructions.clear();
+            agents[i].instructions.addAll(instruction1);
             if(Math.random()<MUTATION_CHANCE){
                 int numberOfMutations = rand.nextInt(MAX_MUTATION_COUNT);
                 for(int m = 0; m<numberOfMutations;m++){
-                    int randomInstructionIndex = rand.nextInt(agents[parentPair[0]].instructions.size());
-                    agents[parentPair[0]].instructions.set(randomInstructionIndex,rand.nextInt(5)); //randomize instructions
+                    int randomInstructionIndex = rand.nextInt(agents[i].instructions.size());
+                    agents[i].instructions.set(randomInstructionIndex,rand.nextInt(5)); //randomize instructions
                 }
             }
-            
         } 
     }
 }

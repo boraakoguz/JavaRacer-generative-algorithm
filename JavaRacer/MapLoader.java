@@ -11,7 +11,7 @@ public class MapLoader {
     public static int[][] loadMap() {
         BufferedImage image;
         int[][] map = new int[100][100];
-        Random rand = new Random(0);
+        Random rand = new Random();
         try {
             image = ImageIO.read(new File("source/track.png"));
             if(image.getHeight()== 100&& image.getWidth() == 100){

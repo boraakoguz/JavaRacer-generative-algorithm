@@ -1,5 +1,7 @@
 package JavaRacer;
 
+import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics2D;
 import java.io.File;
 import java.io.IOException;
@@ -83,5 +85,10 @@ public class TileManager {
                 }
             }
         }
+        graphics2d.setFont(new Font("TimesRoman", Font.BOLD, 20));
+        graphics2d.setColor(Color.BLACK);
+        graphics2d.drawString("Best fit: " + gameWindow.genAlg.bestFit, 10, 20);
+        graphics2d.drawString("Gen. No: " + gameWindow.genAlg.generationNumber, 10, 40);
+
     }
 }
