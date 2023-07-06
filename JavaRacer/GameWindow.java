@@ -15,7 +15,7 @@ public class GameWindow extends JPanel implements Runnable{
     Thread gameThread;
     KeyHandler keyHandle = new KeyHandler();
     TileManager tileManager = new TileManager(this);
-    Agent[] agents = new Agent[10];
+    Agent[] agents = new Agent[100];
     CollisionControl collisionControl = new CollisionControl(this);
     Camera camera;
     GenerationAlgorithm genAlg;

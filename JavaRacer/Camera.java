@@ -5,6 +5,7 @@ public class Camera {
     int screenMidX, screenMidY;
     KeyHandler keyHandle;
     GameWindow gameWindow;
+    int speed = 10;
     public Camera(GameWindow gw, KeyHandler kh, int worldX, int worldY){
         this.gameWindow = gw;
         this.keyHandle = kh;
@@ -15,16 +16,16 @@ public class Camera {
     }
     public void update(){
         if (keyHandle.aPressed){
-            this.worldX -=8;
+            this.worldX -=speed;
         }
         else if(keyHandle.dPressed){
-            this.worldX += 8;
+            this.worldX += speed;
         }   
         else if(keyHandle.wPressed){
-            this.worldY -=8;
+            this.worldY -=speed;
         }
         else if(keyHandle.sPressed){
-            this.worldY += 8;
+            this.worldY += speed;
         }
     }
     public int getWorldX(){

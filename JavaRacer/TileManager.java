@@ -66,7 +66,7 @@ public class TileManager {
             e.printStackTrace();
         }
     }
-    public void draw(Graphics2D graphics2d, Camera camera){ //Draws the map around the agent
+    public void draw(Graphics2D graphics2d, Camera camera){ //Draws the map around the camera
         int cameraX = camera.getWorldX();
         int cameraY = camera.getWorldY();
         int screenMidX = camera.getScreenMidX();
@@ -89,6 +89,8 @@ public class TileManager {
         graphics2d.setColor(Color.BLACK);
         graphics2d.drawString("Best fit: " + gameWindow.genAlg.bestFit, 10, 20);
         graphics2d.drawString("Gen. No: " + gameWindow.genAlg.generationNumber, 10, 40);
+        graphics2d.drawString("Population Size: " + gameWindow.genAlg.POPULATION, 10, 60);
+        graphics2d.drawString("Instruction Size: " + gameWindow.genAlg.instructionSize, 10, 80);
 
     }
 }

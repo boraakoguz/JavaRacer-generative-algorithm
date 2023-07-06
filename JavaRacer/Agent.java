@@ -17,7 +17,7 @@ public class Agent {
     public double frictionCoefficient; //road friction: 1 in asphalt, 0.1 in grass checked by CollisionControl class
     public int laps = 0;
     public double points = 0;
-    public boolean onFinishLine, offFinishLine, isCollided = false; //flags for game logic
+    public boolean onFinishLine, offFinishLine= false; //flags for game logic
     public ArrayList<Integer> instructions;
     int nextActionTimer,instructionIndex;
     public boolean isFinished = false;
@@ -123,14 +123,9 @@ public class Agent {
     }
     public void calculatePoints(){
         if(frictionCoefficient<1){
-            if(!isCollided){
-                points-=1000;
-                isCollided = true;
-            }
             points -= (velocity.netVelocity()/frictionCoefficient)/10;
         }
         else{
-            isCollided = false;
             points += velocity.netVelocity()/10;
         }
         if(points<0){
@@ -201,8 +196,5 @@ public class Agent {
     }
     public Velocity getVelocity(){
         return this.velocity;
-    }
-    public boolean getIsCollided(){
-        return this.isCollided;
     }
 }
