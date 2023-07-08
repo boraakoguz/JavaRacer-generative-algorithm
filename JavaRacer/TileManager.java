@@ -91,6 +91,34 @@ public class TileManager {
         graphics2d.drawString("Gen. No: " + gameWindow.genAlg.generationNumber, 10, 40);
         graphics2d.drawString("Population Size: " + gameWindow.genAlg.POPULATION, 10, 60);
         graphics2d.drawString("Instruction Size: " + gameWindow.genAlg.instructionSize, 10, 80);
+    }
+    public void draw(Graphics2D graphics2d,Camera camera, Agent agent){ //Draws the map around the agent
+        camera.setWorldX(agent.agentX);
+        camera.setWorldY(agent.agentY);
+        int cameraX = camera.getWorldX();
+        int cameraY = camera.getWorldY();
+        int screenMidX = camera.getScreenMidX();
+        int screenMidY = camera.getScreenMidY();
 
+        for(int i = 0; i<row;i++){
+            int worldY = i*tileSize;
+            int screenY = worldY - cameraY + screenMidY;
+            for(int j = 0; j<collumn; j++){
+                int worldX = j*tileSize;
+                int screenX = worldX - cameraX + screenMidX;
+                if(worldX>cameraX-screenMidX -1*tileSize&&
+                worldX<cameraX+screenMidX+3*tileSize&&
+                worldY>cameraY-screenMidY-1*tileSize&&
+                worldY<cameraY+screenMidY+3*tileSize){
+                    graphics2d.drawImage(tiles[map[i][j]].image,screenX,screenY,tileSize,tileSize,null);
+                }
+            }
+        }
+        graphics2d.setFont(new Font("TimesRoman", Font.BOLD, 20));
+        graphics2d.setColor(Color.BLACK);
+        graphics2d.drawString("Best fit: " + gameWindow.genAlg.bestFit, 10, 20);
+        graphics2d.drawString("Gen. No: " + gameWindow.genAlg.generationNumber, 10, 40);
+        graphics2d.drawString("Population Size: " + gameWindow.genAlg.POPULATION, 10, 60);
+        graphics2d.drawString("Instruction Size: " + gameWindow.genAlg.instructionSize, 10, 80);
     }
 }

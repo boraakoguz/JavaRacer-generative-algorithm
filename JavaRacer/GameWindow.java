@@ -3,6 +3,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+
 import javax.swing.JPanel;
 
 public class GameWindow extends JPanel implements Runnable{
@@ -12,6 +13,7 @@ public class GameWindow extends JPanel implements Runnable{
     public final int WIDTH = tileSize*30;
     public final int HEIGHT = tileSize*20;
     private final int FPS = 60;
+    private final boolean CAMERA = false;
     Thread gameThread;
     KeyHandler keyHandle = new KeyHandler();
     TileManager tileManager = new TileManager(this);
@@ -19,6 +21,7 @@ public class GameWindow extends JPanel implements Runnable{
     CollisionControl collisionControl = new CollisionControl(this);
     Camera camera;
     GenerationAlgorithm genAlg;
+
 
     public GameWindow(){
         Color backgroundColor = new Color(34, 139, 34);
@@ -69,8 +72,12 @@ public class GameWindow extends JPanel implements Runnable{
     public void paintComponent(Graphics graphics){
         super.paintComponent(graphics);
         Graphics2D graphic = (Graphics2D)graphics;
-
-        tileManager.draw(graphic,camera);
+        if(genAlg.eliteIndexes.size()>0&&!CAMERA){
+            tileManager.draw(graphic, camera, agents[genAlg.eliteIndexes.get(0)]);
+        }
+        else{
+            tileManager.draw(graphic,camera);
+        }
         for (Agent agent : agents) {
             agent.draw(graphic);
         }

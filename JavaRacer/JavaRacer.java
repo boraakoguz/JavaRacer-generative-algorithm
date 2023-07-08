@@ -8,8 +8,9 @@ public class JavaRacer {
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         window.setTitle("Java Racer");
         window.setResizable(false);
-        
+
         GameWindow gameWindow = new GameWindow();
+
         window.add(gameWindow);
         window.pack();
         window.setVisible(true);
