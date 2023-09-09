@@ -5,33 +5,33 @@ import java.util.Random;
 
 public class GenerationAlgorithm {
     public final int    POPULATION;
-    public final int    NUMBER_OF_GENERATIONS = 500;
-    public final double MUTATION_CHANCE = 0.3;
+    public final int    NUMBER_OF_GENERATIONS = 1000;
+    public final double MUTATION_CHANCE = 0.4;
     public final int    MAX_MUTATION_COUNT = 8;
     public final int    ELITISM_NUMBER = 2;
     public final int    NUMBER_OF_GENERATIONS_PER_INCREASE = 10;
     public final int    INSTRUCTION_SIZE_INCREASE = 10;
-    public final boolean LOAD_FILE = false;
+    public final boolean LOAD_FILE = true;
     static Random rand = new Random();
     SaveLoader saveLoader = new SaveLoader();
     ArrayList<Integer> eliteIndexes = new ArrayList<Integer>();
     int generationNumber = 0;
     int instructionSize = 20;
     double improvement = 0;
+    double lastIncreasePoints = 0;
+    int failedIncreaseCounter = 0;
     double bestFit = 0;
     Agent[] agents;
 
     public GenerationAlgorithm(Agent[] agents){
         this.agents = agents;
         this.POPULATION = agents.length;
-        if(LOAD_FILE){
+        if(LOAD_FILE&&saveLoader.hasSaveFile()){
             saveLoader.loadSave(this);
         }
         else{
             createPopulation();
         }
-        createPopulation();
-        
     }
     public void checkGeneration(){
         if(agents[agents.length-1].isFinished){
@@ -47,12 +47,17 @@ public class GenerationAlgorithm {
                 agent.reset();
             }
             generationNumber++;
-            if(generationNumber>=instructionSize && generationNumber%NUMBER_OF_GENERATIONS_PER_INCREASE == 0){
+            if(generationNumber>=instructionSize && generationNumber%NUMBER_OF_GENERATIONS_PER_INCREASE == 0 && fitnesses.get(eliteIndexes.get(0))-lastIncreasePoints>10){
                 for(Agent agent : agents){
                     assignRandomInstructions(agent, INSTRUCTION_SIZE_INCREASE);
                 }
                 instructionSize += INSTRUCTION_SIZE_INCREASE;
                 saveLoader.save(this);
+                lastIncreasePoints = fitnesses.get(eliteIndexes.get(0));
+                failedIncreaseCounter = 0;
+            }
+            else{
+                failedIncreaseCounter += 1;
             }
         }
     }
@@ -115,9 +120,9 @@ public class GenerationAlgorithm {
         ArrayList<ArrayList<Integer>> instructionsTemp = new ArrayList<ArrayList<Integer>>();
         double mutationAgression = 0;
         if(improvement<0.5){
-                mutationAgression = 0.2;
-                System.out.println("Mutation Agression Activated");
-            }
+            mutationAgression = 0.2;
+            System.out.println("Mutation Agression Activated");
+        }
         for(int i = 0; i<POPULATION; i++){
             instructionsTemp.add(new ArrayList<Integer>(agents[i].instructions));
         }
@@ -136,19 +141,17 @@ public class GenerationAlgorithm {
             agents[i].instructions.clear();
             agents[i].instructions.addAll(instruction1);
             if(Math.random()<MUTATION_CHANCE+mutationAgression){
-                if(Math.random()<0.4){ //randomize anywhere in the instructions %40 chance to mutate anywhere, %60 chance to mutate last 20
-                    int numberOfMutations = rand.nextInt(MAX_MUTATION_COUNT) + (int)mutationAgression*10;
-                    for(int m = 0; m<numberOfMutations;m++){
-                        int randomInstructionIndex = rand.nextInt(agents[i].instructions.size());
-                        agents[i].instructions.set(randomInstructionIndex,rand.nextInt(5)); //randomize instructions
-                    }
+                int numberOfMutations = rand.nextInt(MAX_MUTATION_COUNT) + (int)mutationAgression*10;
+                int startOfMutations;
+                if(failedIncreaseCounter>20){
+                    startOfMutations = 40;
                 }
-                else{ //only randomize the last 20 (%60)
-                    int numberOfMutations = rand.nextInt(MAX_MUTATION_COUNT) + (int)mutationAgression*10;
-                    for(int m = 0; m<numberOfMutations;m++){
-                        int randomInstructionIndex = rand.nextInt(agents[i].instructions.size()-20,agents[i].instructions.size());
-                        agents[i].instructions.set(randomInstructionIndex,rand.nextInt(5)); //randomize instructions
-                    }
+                else{
+                    startOfMutations = 20;
+                }
+                for(int m = 0; m<numberOfMutations;m++){
+                    int randomInstructionIndex = rand.nextInt(agents[i].instructions.size()-startOfMutations,agents[i].instructions.size());
+                    agents[i].instructions.set(randomInstructionIndex,rand.nextInt(5)); //randomize instructions
                 }
             }
         } 

@@ -72,11 +72,14 @@ public class GameWindow extends JPanel implements Runnable{
     public void paintComponent(Graphics graphics){
         super.paintComponent(graphics);
         Graphics2D graphic = (Graphics2D)graphics;
-        if(genAlg.eliteIndexes.size()>0&&!CAMERA){
+        if(CAMERA){
+            tileManager.draw(graphic,camera);
+        }
+        else if(genAlg.eliteIndexes.size()>0){
             tileManager.draw(graphic, camera, agents[genAlg.eliteIndexes.get(0)]);
         }
         else{
-            tileManager.draw(graphic,camera);
+            tileManager.draw(graphic, camera, agents[0]);
         }
         for (Agent agent : agents) {
             agent.draw(graphic);

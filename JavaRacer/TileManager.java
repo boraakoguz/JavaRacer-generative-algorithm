@@ -91,6 +91,7 @@ public class TileManager {
         graphics2d.drawString("Gen. No: " + gameWindow.genAlg.generationNumber, 10, 40);
         graphics2d.drawString("Population Size: " + gameWindow.genAlg.POPULATION, 10, 60);
         graphics2d.drawString("Instruction Size: " + gameWindow.genAlg.instructionSize, 10, 80);
+        graphics2d.drawString("Last Increase Points: " + gameWindow.genAlg.lastIncreasePoints, 10, 100);
     }
     public void draw(Graphics2D graphics2d,Camera camera, Agent agent){ //Draws the map around the agent
         camera.setWorldX(agent.agentX);
@@ -120,5 +121,6 @@ public class TileManager {
         graphics2d.drawString("Gen. No: " + gameWindow.genAlg.generationNumber, 10, 40);
         graphics2d.drawString("Population Size: " + gameWindow.genAlg.POPULATION, 10, 60);
         graphics2d.drawString("Instruction Size: " + gameWindow.genAlg.instructionSize, 10, 80);
+        graphics2d.drawString("Last Increase Points: " + gameWindow.genAlg.lastIncreasePoints, 10, 100);
     }
 }
