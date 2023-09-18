@@ -6,8 +6,11 @@ A Generative Algorithm AI implementation on a 2D racing simulator "Java Racer" (
 A screenshot from the training process
 ![screenshot](https://github.com/boraakoguz/JavaRacer-generative-algorithm/blob/main/screenshots/screenshot1.png)
 
-A gif of the start of a half-completed training
+
 ![gif](https://github.com/boraakoguz/JavaRacer-generative-algorithm/blob/main/screenshots/example.gif)
+A gif of the start of a half-completed training
+
+## Creating a Track
 
 Map creation is as simple as a 100x100 png. Using the default rgb values in paint, the color coding is as follows:
 - Green: Grass
