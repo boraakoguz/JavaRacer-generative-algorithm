@@ -14,6 +14,7 @@ Project features:
 - Custom map/track design
 - Save mechanism
 - Live data on the screen
+- An example save file (/source/saveEX.txt). Rename the file to save.txt to watch a pre trained model.
 
 Live Data meanings:
 - Best Fit: The most points scored by an agent of the previous generation
