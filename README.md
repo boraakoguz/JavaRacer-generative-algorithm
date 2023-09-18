@@ -18,7 +18,8 @@ Project features:
 Live Data meanings:
 - Best Fit: The most points scored by an agent of the previous generation
 - Gen. No: The number of generations
-- Instruction Size: The length of the instruction array used by the agents that gradually expands
+- Population Size: Number of agents in the population
+- Instruction Size: The length of the instruction array used by the agents. Gradually expands as training continues
 - Last Increase Points: The maximum points scored by an agent at the previous Instruction array expansion. Serves as a benchmark and controlls the roll-back system, advanced mutation system and stops Instruction increase in case of failure to pass the benchmark. 
 
 ## Screen Shots
