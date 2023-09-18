@@ -1,20 +1,8 @@
-# Java Racer
+# Java Racer Generative Algorithm
 
-A 2D basic racing game that features easy to custimize maps, collision detection, car behaviour physics, different surface types with different behaviours and a point system.
-
+A Generative Algorithm AI implementation on a 2D racing simulator "Java Racer" (https://github.com/boraakoguz/JavaRacer)
 
 ## Screen Shots
-The start of the game
-
-![start](https://github.com/boraakoguz/JavaRacer/assets/66472581/306fd8f5-973d-454e-a650-4a1edbd6436f)
-
-Going off bounds will reduce points
-
-![loss](https://github.com/boraakoguz/JavaRacer/assets/66472581/76bd1441-06fb-4d53-8900-c5cf9ced2ff2)
-
-Going off the track will reduce further points
-
-![offtrack](https://github.com/boraakoguz/JavaRacer/assets/66472581/3454d42d-cbea-4b46-9466-a10f74b6c36d)
 
 Map creation is as simple as a 100x100 png. Using the default rgb values in paint, the color coding is as follows:
 - Green: Grass
@@ -33,10 +21,9 @@ If you want to create your own map, edit the track.png file in source directory 
 
 ## TODO
 
-- Add car upgrades and car customization
+- Add gradual saving to reduce training time
 
-- Physics overhaul
+- Add post-completion check up to improve speed on some sectors of the track
 
-- Add Multiplayer (May be another project)
 
   
